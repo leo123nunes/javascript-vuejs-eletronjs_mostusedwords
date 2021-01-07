@@ -2,7 +2,7 @@
     <v-container>
         <v-form>
             <v-file-input label="Select the subtitle" 
-            multiples 
+            multiple
             prepend-icon="mdi-message-text"
             append-icon="mdi-send"
             v-model="files"
@@ -20,20 +20,26 @@
 
 <script>
 import Pill from "./Pill.vue";
+import {ipcRenderer} from 'electron'
+
 export default {
   components: { Pill },
   data: function () {
     return {
       files: [],
-      groupedWords: [
-        { name: "words", amount: "1234" },
-        { name: "test", amount: "900" }
-      ],
+      groupedWords: []
     };
   },
   methods: {
       loadSubtitles(){
-          console.log(this.files)
+        var paths = this.files.map(element => element.path)
+
+        console.log('hiii')
+
+        ipcRenderer.send('process-subtitles', paths)
+        ipcRenderer.on('process-subtitles', (event, resp) => {
+        this.groupedWords = resp
+        })
       }
   }
 };
