@@ -32,9 +32,7 @@ export default {
   },
   methods: {
       loadSubtitles(){
-        var paths = this.files.map(element => element.path)
-
-        console.log('hiii')
+        const paths = this.files.map(element => element.path)
 
         ipcRenderer.send('process-subtitles', paths)
         ipcRenderer.on('process-subtitles', (event, resp) => {
