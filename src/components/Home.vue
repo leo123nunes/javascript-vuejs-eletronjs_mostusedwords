@@ -13,7 +13,7 @@
         </v-form>
     <div class="pills">
         <Pill v-for="word in groupedWords" :key="word.name" :name="word.name"
-        :amount="word.amount"></Pill>
+        :amount="word.amount" :mostusedamount="mostUsedAmount"></Pill>
     </div>
     </v-container> 
 </template>
@@ -27,7 +27,8 @@ export default {
   data: function () {
     return {
       files: [],
-      groupedWords: []
+      groupedWords: [],
+      mostUsedAmount : 0
     };
   },
   methods: {
@@ -37,6 +38,16 @@ export default {
         ipcRenderer.send('process-subtitles', paths)
         ipcRenderer.on('process-subtitles', (event, resp) => {
         this.groupedWords = resp
+        let mostUsedAmount = 0
+
+        for(let x = 0; x < resp.length; x++){
+          if(resp[x].amount > mostUsedAmount){
+            mostUsedAmount = resp[x].amount
+          }
+        }
+
+        this.mostUsedAmount = mostUsedAmount
+        console.log(`most used amount = ${this.mostUsedAmount}`)
         })
       }
   }
